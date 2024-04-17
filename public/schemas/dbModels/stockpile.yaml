@@ -1,0 +1,27 @@
+Stockpile:
+  title: 'Stockpile'
+  type: object
+  properties:
+    id:
+      type: integer
+    title:
+      type: string
+    groupId:
+      type: integer
+    dateOfManufacture:
+      type: string
+      format: date
+    inventoryNumber:
+      type: string
+    serialNumber:
+      type: string
+    balanceAmount:
+      type: integer
+    actualAmount:
+      type: integer
+    integerId:
+      type: integer
+    cost:
+      type: integer
+    addDocId:
+      type: integer

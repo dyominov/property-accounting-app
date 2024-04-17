@@ -1,0 +1,14 @@
+DocumentType:
+  title: 'DocumentType'
+  type: object
+  properties:
+    id:
+      type: integer
+    operation:
+      $ref: './dbModels/enums.yaml#/Operation'
+    docTypeId:
+      type: integer
+    docType:
+      $ref: './dbModels/docType.yaml#/DocType'
+
+

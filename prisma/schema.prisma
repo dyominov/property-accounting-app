@@ -1,0 +1,245 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum DocumentStatus {
+  NOT_REALIZED
+  REALIZED
+  REALIZED_DISABLED
+}
+
+enum MainAssetStatus {
+  UNDEFINED // when document saved, but not realized
+  OWNED
+  PINNED
+  TRANSFERED
+}
+
+enum StockpileStatus {
+  UNDEFINED // when document saved, but not realized
+  OWNED
+  TRANSFERED
+}
+
+enum Operation {
+  ADD_SUPPLY
+  PIN_MAIN_ASSET
+  TRANSFER_SUPPLY
+  CHANGE_CATEGORY
+}
+
+model User {
+  id                                String                   @id @default(uuid()) @db.Uuid
+  name                              String                   @unique @db.VarChar(50)
+  password                          String                   @db.VarChar(255)
+  documentPinMainAssetCreators      DocumentPinMainAsset[]   @relation("documentPinMainAssetCreators")
+  documentPinMainAssetRealizators   DocumentPinMainAsset[]   @relation("documentPinMainAssetRealizators")
+  documentAddSupplyCreators         DocumentAddSupply[]      @relation("documentAddSupplyCreators")
+  documentAddSupplyRealizators      DocumentAddSupply[]      @relation("documentAddSupplyRealizators")
+  documentTransferSupplyCreators    DocumentTransferSupply[] @relation("documentTransferSupplyCreators")
+  documentTransferSupplyRealizators DocumentTransferSupply[] @relation("documentTransferSupplyRealizators")
+  documentChangeCategoryCreators    DocumentChangeCategory[] @relation("documentChangeCategoryCreators")
+  documentChangeCategoryRealizators DocumentChangeCategory[] @relation("documentChangeCategoryRealizators")
+}
+
+model MainAsset {
+  id                   Int                      @id @default(autoincrement())
+  title                String                   @db.VarChar(255)
+  status               MainAssetStatus          @default(OWNED)
+  groupId              Int?
+  dateOfManufacture    DateTime                 @db.Date
+  dateOfStartOperation DateTime                 @db.Date
+  inventoryNumber      String                   @db.VarChar(50)
+  serialNumber         String                   @db.VarChar(50)
+  categoryId           Int
+  integerId            Int
+  cost                 Decimal                  @db.Money
+  aowat                Decimal                  @db.Money
+  category             SupplyCategory           @relation(fields: [categoryId], references: [id])
+  group                Group?                   @relation(fields: [groupId], references: [id])
+  integer              Integer                  @relation(fields: [integerId], references: [id])
+  pinDocs              DocumentPinMainAsset[]
+  transferDocs         DocumentTransferSupply[]
+  categoryDocs         DocumentChangeCategory[]
+  addDoc               DocumentAddSupply        @relation(fields: [addDocId], references: [id])
+  addDocId             Int
+}
+
+model Stockpile {
+  id                Int                    @id @default(autoincrement())
+  title             String                 @db.VarChar(255)
+  status            StockpileStatus        @default(OWNED)
+  groupId           Int?
+  dateOfManufacture DateTime               @db.Date
+  serialNumber      String                 @db.VarChar(50)
+  balanceAmount     Int
+  actualAmount      Int
+  integerId         Int
+  cost              Decimal                @db.Money
+  group             Group?                 @relation(fields: [groupId], references: [id])
+  integer           Integer                @relation(fields: [integerId], references: [id])
+  transferred       TransferredStockpile[]
+  addDoc            DocumentAddSupply      @relation(fields: [addDocId], references: [id])
+  addDocId          Int
+}
+
+model TransferredStockpile {
+  id           Int                      @id @default(autoincrement())
+  parentId     Int
+  parent       Stockpile                @relation(fields: [parentId], references: [id])
+  amount       Int
+  transferDocs DocumentTransferSupply[]
+}
+
+model Group {
+  id         Int         @id @default(autoincrement())
+  title      String      @unique @db.VarChar(30)
+  mainAssets MainAsset[]
+  Stockpile  Stockpile[]
+}
+
+model SupplyCategory {
+  id           Int                      @id @default(autoincrement())
+  title        String                   @unique @db.VarChar(20)
+  mainAssets   MainAsset[]
+  categoryDocs DocumentChangeCategory[]
+}
+
+model Integer {
+  id         Int         @id @default(autoincrement())
+  title      String      @unique @db.VarChar(10)
+  mainAssets MainAsset[]
+  Stockpile  Stockpile[]
+}
+
+model DocumentAddSupply {
+  id           Int                       @id @default(autoincrement())
+  number       String                    @db.VarChar(50)
+  date         DateTime                  @db.Date
+  status       DocumentStatus
+  type         AllowedDocTypeToOperation @relation(fields: [typeId], references: [id])
+  typeId       Int
+  mainAssets   MainAsset[]
+  stockpile    Stockpile[]
+  createdAt    DateTime                  @db.Date
+  realizedAt   DateTime?                 @db.Date
+  creator      User                      @relation("documentAddSupplyCreators", fields: [creatorId], references: [id])
+  realizator   User?                     @relation("documentAddSupplyRealizators", fields: [realizatorId], references: [id])
+  scans        String[]
+  creatorId    String                    @db.Uuid
+  realizatorId String?                   @db.Uuid
+
+  @@unique([typeId, number, date])
+}
+
+model DocumentPinMainAsset {
+  id           Int                       @id @default(autoincrement())
+  number       String                    @db.VarChar(50)
+  date         DateTime                  @db.Date
+  status       DocumentStatus
+  type         AllowedDocTypeToOperation @relation(fields: [typeId], references: [id])
+  typeId       Int
+  mainAssets   MainAsset[]
+  createdAt    DateTime                  @db.Date
+  realizedAt   DateTime?                 @db.Date
+  creator      User                      @relation("documentPinMainAssetCreators", fields: [creatorId], references: [id])
+  realizator   User?                     @relation("documentPinMainAssetRealizators", fields: [realizatorId], references: [id])
+  holder       Holder                    @relation(fields: [holderId], references: [id])
+  scans        String[]
+  creatorId    String                    @db.Uuid
+  realizatorId String?                   @db.Uuid
+  holderId     Int
+
+  @@unique([typeId, number, date])
+}
+
+model DocumentTransferSupply {
+  id           Int                       @id @default(autoincrement())
+  number       String                    @db.VarChar(50)
+  date         DateTime                  @db.Date
+  status       DocumentStatus
+  type         AllowedDocTypeToOperation @relation(fields: [typeId], references: [id])
+  typeId       Int
+  mainAssets   MainAsset[]
+  stockpile    TransferredStockpile[]
+  createdAt    DateTime                  @db.Date
+  realizedAt   DateTime?                 @db.Date
+  creator      User                      @relation("documentTransferSupplyCreators", fields: [creatorId], references: [id])
+  realizator   User?                     @relation("documentTransferSupplyRealizators", fields: [realizatorId], references: [id])
+  holder       TransferSupplyHolder      @relation(fields: [holderId], references: [id])
+  scans        String[]
+  creatorId    String                    @db.Uuid
+  realizatorId String?                   @db.Uuid
+  holderId     Int
+
+  @@unique([typeId, number, date])
+}
+
+model DocumentChangeCategory {
+  id           Int                       @id @default(autoincrement())
+  number       String                    @db.VarChar(50)
+  date         DateTime                  @db.Date
+  status       DocumentStatus
+  type         AllowedDocTypeToOperation @relation(fields: [typeId], references: [id])
+  typeId       Int
+  mainAssets   MainAsset[]
+  createdAt    DateTime                  @db.Date
+  realizedAt   DateTime?                 @db.Date
+  creator      User                      @relation("documentChangeCategoryCreators", fields: [creatorId], references: [id])
+  realizator   User?                     @relation("documentChangeCategoryRealizators", fields: [realizatorId], references: [id])
+  category     SupplyCategory            @relation(fields: [categoryId], references: [id])
+  scans        String[]
+  creatorId    String                    @db.Uuid
+  realizatorId String?                   @db.Uuid
+  categoryId   Int
+
+  @@unique([typeId, number, date])
+}
+
+model DocumentType {
+  id                Int                         @id @default(autoincrement())
+  title             String                      @unique @db.VarChar(50)
+  allowedOperations AllowedDocTypeToOperation[]
+}
+
+model AllowedDocTypeToOperation {
+  id                   Int                      @id @default(autoincrement())
+  operation            Operation
+  docType              DocumentType             @relation(fields: [docTypeId], references: [id])
+  docTypeId            Int
+  addSupplyDocs        DocumentAddSupply[]
+  pinnedMainAssetDocs  DocumentPinMainAsset[]
+  transferedSupplyDocs DocumentTransferSupply[]
+  categoryDocs         DocumentChangeCategory[]
+}
+
+model NotSystemUnit {
+  id                    Int                    @id @default(autoincrement())
+  title                 String                 @unique @db.VarChar(255)
+  holders               Holder[]
+  transferSupplyHolders TransferSupplyHolder[]
+}
+
+model Holder {
+  id                    Int                    @id @default(autoincrement())
+  name                  String                 @unique
+  notSystemUnit         NotSystemUnit?         @relation(fields: [holderNotSystemUnitId], references: [id])
+  phone                 String
+  location              String
+  extraInfo             String
+  holderNotSystemUnitId Int?
+  docPinMA              DocumentPinMainAsset[]
+}
+
+model TransferSupplyHolder {
+  id                    Int                      @id @default(autoincrement())
+  name                  String                   @unique
+  notSystemUnit         NotSystemUnit?           @relation(fields: [holderNotSystemUnitId], references: [id])
+  holderNotSystemUnitId Int?
+  docTransfer           DocumentTransferSupply[]
+}

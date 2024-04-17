@@ -1,0 +1,79 @@
+DocumentAddSupply:
+  title: 'Document AddSupply'
+  type: object
+  properties:
+    header:
+      $ref: '#/Header'
+    objects:
+      type: array
+      items:
+        oneOf:
+          - $ref: '#/MainAsset'
+          - $ref: '#/Stockpile'
+    scans:
+      type: array
+      items: 
+        type: string
+MainAsset:
+  title: 'MainAsset'
+  type: object
+  properties:
+    title:
+      type: string
+    group:
+      type: integer
+    inventoryNumber:
+      type: string
+    serialNumber:
+      type: string
+    category:
+      type: integer
+    integer:
+      type: integer
+    cost:
+      type: integer
+    aowat:
+      type: integer
+    dateOfManufacture:
+      type: string
+      format: date
+    dateOfStartOperation:
+      type: string
+      format: date
+Stockpile:
+  title: 'Stockpile'
+  type: object
+  properties:
+    title:
+      type: string
+    group:
+      type: integer
+    inventoryNumber:
+      type: string
+    serialNumber:
+      type: string
+    balanceAmount:
+      type: integer
+    actualAmount:
+      type: integer
+    integer:
+      type: integer
+    cost:
+      type: integer
+    dateOfManufacture:
+      type: string
+      format: date
+Header:
+  title: 'Header'
+  type: object
+  properties:
+    type:
+      type: integer
+    number:
+      type: string
+    date:
+      type: string
+      format: date
+
+
+

@@ -1,0 +1,17 @@
+RequestBody:
+  title: 'Upload scan Request body'
+  type: object
+  properties:
+    file:
+      type: binary
+    operation:
+      $ref: '#/Operation'
+    documentTitle:
+      type: string
+Operation:
+  title: 'Operation'
+  type: string
+  enum:
+    - ADD_SUPPLY
+    - PIN_MAIN_ASSET
+

@@ -1,0 +1,104 @@
+Document:
+  title: 'Document AddSupply realized'
+  type: object
+  properties:
+    number: 
+      type: string
+    mainAssets:
+      type: array
+      items:
+        $ref: '#/MainAsset'
+    stockpile:
+      type: array
+      items:
+        $ref: '#/Stockpile'
+    type:
+      $ref: '../../dbModels/allowedType.yaml#/AllowedType'
+    creator:
+      $ref: '../../dbModels/user.yaml#/User'
+    realizator:
+      $ref: '../../dbModels/user.yaml#/User'
+    status:
+      $ref: '../../dbModels/enums.yaml#/DocumentStatus'
+    scans:
+      type: array
+      items: 
+        type: string
+    createdAt:
+      type: string
+      format: date
+    realizedAt:
+      type: string
+      format: date
+MainAsset:
+  title: 'MainAsset'
+  type: object
+  properties:
+    id:
+      type: integer
+    title:
+      type: string
+    status:
+      $ref: '../../dbModels/enums.yaml#/MainAssetStatus'
+    groupId:
+      type: integer
+    dateOfManufacture:
+      type: string
+      format: date
+    dateOfStartOperation:
+      type: string
+      format: date
+    inventoryNumber:
+      type: string
+    serialNumber:
+      type: string
+    categoryId:
+      type: integer
+    integerId:
+      type: integer
+    cost:
+      type: integer
+    aowat:
+      type: integer
+    addDocId:
+      type: integer
+    group:
+      $ref: '../../dbModels/group.yaml#/Group'
+    category:
+      $ref: '../../dbModels/category.yaml#/Category'
+    integer:
+      $ref: '../../dbModels/integer.yaml#/Integer'
+Stockpile:
+  title: 'Stockpile'
+  type: object
+  properties:
+    id:
+      type: integer
+    title:
+      type: string
+    groupId:
+      type: integer
+    dateOfManufacture:
+      type: string
+      format: date
+    inventoryNumber:
+      type: string
+    serialNumber:
+      type: string
+    integerId:
+      type: integer
+    cost:
+      type: integer
+    actualAmount:
+      type: integer
+    balanceAmount:
+      type: integer
+    addDocId:
+      type: integer
+    group:
+      $ref: '../../dbModels/group.yaml#/Group'
+    integer:
+      $ref: '../../dbModels/integer.yaml#/Integer'
+
+
+

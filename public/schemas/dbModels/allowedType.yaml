@@ -1,0 +1,12 @@
+AllowedType:
+  title: 'AllowedType'
+  type: object
+  properties:
+    id: 
+      type: integer
+    operation:
+      $ref: './enums.yaml#/Operation'
+    docTypeId:
+      type: integer
+    docType:
+      $ref: './docType.yaml#/DocType'

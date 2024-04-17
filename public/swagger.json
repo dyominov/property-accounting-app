@@ -1,0 +1,1265 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Облік Майна API",
+    "version": "1.0"
+  },
+  "paths": {
+    "/api/DELETE/main-asset/{id}": {
+      "delete": {
+        "summary": "Delete selected main asset",
+        "security": [
+          {
+            "BearerAuth": [
+              "bearer"
+            ]
+          }
+        ],
+        "description": "Delete selected main asset",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id of the main asset to delete",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 401
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 500
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Wrong query to database"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/DELETE/main-assets": {
+      "delete": {
+        "summary": "Delete selected main assets",
+        "description": "Delete selected main assets",
+        "security": [
+          {
+            "BearerAuth": [
+              "bearer"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "ids",
+            "in": "query",
+            "description": "ids of the main assets to delete",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 401
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 500
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Wrong query to database"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/GET/categories": {
+      "get": {
+        "summary": "Returns list of categories",
+        "description": "Returns list of all categories of main assets registered in app",
+        "security": [
+          {
+            "BearerAuth": [
+              "bearer"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON list of all categories",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "./schemas/dbModels/category.yaml#/Category"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/GET/document/{operation}/{id}": {
+      "get": {
+        "summary": "Returns document",
+        "security": [
+          {
+            "BearerAuth": [
+              "bearer"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "operation",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "string representation of the operation"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Numeric ID of the document to get"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON document",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "./schemas/api-get-document-{operation}-{id}/responses/addSupply-realized.yaml#/Document"
+                    },
+                    {
+                      "$ref": "./schemas/api-get-document-{operation}-{id}/responses/addSupply-notRealized.yaml#/Document"
+                    },
+                    {
+                      "$ref": "./schemas/api-get-document-{operation}-{id}/responses/pinMainAsset-realized.yaml#/Document"
+                    },
+                    {
+                      "$ref": "./schemas/api-get-document-{operation}-{id}/responses/pinMainAsset-notRealized.yaml#/Document"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/GET/document/{operation}/{id}/scan/{filename}": {
+      "get": {
+        "summary": "Returns list of scan filenames",
+        "security": [
+          {
+            "BearerAuth": [
+              "bearer"
+            ]
+          }
+        ],
+        "headers": {
+          "X-Content-Type-Options": {
+            "description": "response HTTP header is a marker used by the server to indicate that the MIME types advertised in the Content-Type headers should be followed and not be changed. The header allows you to avoid MIME type sniffing by saying that the MIME types are deliberately configured.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "Accept-Ranges": {
+            "description": "HTTP response header is a marker used by the server to advertise its support for partial requests from the client for file downloads",
+            "schema": {
+              "type": "string"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "operation",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "string representation of the operation"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Numeric ID of the document to get"
+          },
+          {
+            "name": "filename",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Filename of scan image of the document to get"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON document",
+            "content": {
+              "image/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/GET/document/{operation}/{id}/scans": {
+      "get": {
+        "summary": "Returns list of scan filenames",
+        "security": [
+          {
+            "BearerAuth": [
+              "bearer"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "operation",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "string representation of the operation"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Numeric ID of the document to get"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON document",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "title": "ScanList",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/GET/document/{operation}/types": {
+      "get": {
+        "summary": "Returns list of types of documents",
+        "description": "Returns list of document types by specific document operation",
+        "security": [
+          {
+            "BearerAuth": [
+              "bearer"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON list of document types",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "./schemas/api-get-document-{operation}-types.yaml#/DocumentType"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/GET/document/add-supply": {
+      "get": {
+        "summary": "Returns document AddSupply by type, number and date",
+        "description": "Returns document AddSupply by type, number and date or null",
+        "security": [
+          {
+            "BearerAuth": [
+              "bearer"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "description": "allowedOperation id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "number",
+            "in": "query",
+            "description": "document number",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "description": "document date",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON document AddSupply",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./schemas/api-get-document-addsupply.yaml#/DocumentAddSupply"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/GET/document/pin-ma": {
+      "get": {
+        "summary": "Returns document PinMainAsset by type, number and date",
+        "description": "Returns document PinMainAsset by type, number and date or null",
+        "security": [
+          {
+            "BearerAuth": [
+              "bearer"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "description": "allowedOperation id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "number",
+            "in": "query",
+            "description": "document number",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "description": "document date",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON document PinMainAsset",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./schemas/api-get-document-pinma.yaml#/DocumentPinMainAsset"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/GET/document/type/{id}": {
+      "get": {
+        "summary": "Returns document AllowedOperation type entity by Id",
+        "security": [
+          {
+            "BearerAuth": [
+              "bearer"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Numeric ID of the document AllowedOperation type entity to get"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON document AllowedOperation type entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./schemas/dbModels/allowedType.yaml#/AllowedType"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/GET/documents": {
+      "get": {
+        "summary": "Returns list of documents",
+        "description": "Returns list of all documents to view",
+        "security": [
+          {
+            "BearerAuth": [
+              "bearer"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON list of all documents",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "./schemas/api-get-documents.yaml#/Document"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/GET/documents/is-realized": {
+      "get": {
+        "summary": "Check selected documents status",
+        "description": "Check selected documents status. If one of them is realized return true",
+        "security": [
+          {
+            "BearerAuth": [
+              "bearer"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "ids",
+            "in": "query",
+            "description": "ids of the documents to check",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON that contains boolean value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "IsPinned",
+                  "properties": {
+                    "isRealized": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/GET/groups": {
+      "get": {
+        "summary": "Returns list of groups",
+        "description": "Returns list of all groups of main assets and stockpile registered in app",
+        "security": [
+          {
+            "BearerAuth": [
+              "bearer"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON list of all groups",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "./schemas/dbModels/group.yaml#/Group"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/GET/integers": {
+      "get": {
+        "summary": "Returns list of integers",
+        "description": "Returns list of all units of measurement registered in app",
+        "security": [
+          {
+            "BearerAuth": [
+              "bearer"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON list of all integers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "./schemas/dbModels/integer.yaml#/Integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/GET/main-assets-selected": {
+      "get": {
+        "summary": "Returns list of selected main assets",
+        "description": "Returns list of selected main assets. If query array is empty, return empty array",
+        "security": [
+          {
+            "BearerAuth": [
+              "bearer"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "ids",
+            "in": "query",
+            "description": "ids of the main assets to fetch.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON list of main assets",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "./schemas/api-get-main-assets-selected.yaml#/MainAsset"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/GET/main-assets": {
+      "get": {
+        "summary": "Returns list of main assets",
+        "description": "Returns list of main assets",
+        "security": [
+          {
+            "BearerAuth": [
+              "bearer"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "description": "status or statuses of the main assets to fetch",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON list of main assets",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "./schemas/api-get-main-assets.yaml#/MainAsset"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/GET/main-assets/is-pinned": {
+      "get": {
+        "summary": "Check selected main assets status",
+        "description": "Check selected main assets status. If one of them is pinned return true",
+        "security": [
+          {
+            "BearerAuth": [
+              "bearer"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "ids",
+            "in": "query",
+            "description": "ids of the main assets to check",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON that contains boolean value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "IsPinned",
+                  "properties": {
+                    "isPinned": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/GET/not-system-units": {
+      "get": {
+        "summary": "Returns list of not system units",
+        "description": "Returns list of all units that not registered in application",
+        "security": [
+          {
+            "BearerAuth": [
+              "bearer"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON list of all not system units",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "./schemas/dbModels/notSystemUnit.yaml#/NotSystemUnit"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/GET/operations": {
+      "get": {
+        "summary": "Returns list of operations",
+        "description": "Returns list of all operations with documents",
+        "security": [
+          {
+            "BearerAuth": [
+              "bearer"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON list of all operations with documents",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "./schemas/api-get-operations.yaml#/Operation"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/GET/stockpile": {
+      "get": {
+        "summary": "Returns list of stockpile",
+        "description": "Returns list of all stockpile objects",
+        "security": [
+          {
+            "BearerAuth": [
+              "bearer"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON list of all stockpile objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "./schemas/api-get-stockpile.yaml#/Stockpile"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/GET/users": {
+      "get": {
+        "summary": "Returns list of users",
+        "description": "Returns list of all user names",
+        "security": [
+          {
+            "BearerAuth": [
+              "bearer"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON list of all users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "./schemas/dbModels/user.yaml#/User"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/PATCH/document/{operation}/realize/{id}": {
+      "patch": {
+        "summary": "Realize document",
+        "description": "Realize created earlier document",
+        "security": [
+          {
+            "BearerAuth": [
+              "bearer"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "operation",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "string representation of the operation"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Numeric ID of the document to patch"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/PATCH/documents/realize": {
+      "patch": {
+        "summary": "Realize documents",
+        "description": "Realize created earlier documents",
+        "security": [
+          {
+            "BearerAuth": [
+              "bearer"
+            ]
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "id": "integer",
+                  "operation": "string"
+                }
+              },
+              "example": [
+                {
+                  "id": 1,
+                  "operation": "ADD_SUPPLY"
+                },
+                {
+                  "id": 2,
+                  "operation": "ADD_SUPPLY"
+                },
+                {
+                  "id": 5,
+                  "operation": "ADD_SUPPLY"
+                },
+                {
+                  "id": 1,
+                  "operation": "PIN_MAIN_ASSET"
+                }
+              ]
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/POST/document/add-supply/save-realize": {
+      "post": {
+        "summary": "Save and realize document",
+        "description": "Save and realize document",
+        "security": [
+          {
+            "BearerAuth": [
+              "bearer"
+            ]
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "./schemas/api-post-document-addSupply-saveRealize/requestBody.yaml#/DocumentAddSupply"
+              },
+              "examples": {
+                "default": {
+                  "$ref": "./schemas/api-post-document-addSupply-saveRealize/requestBody-example.yaml"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./schemas/api-post-document-addSupply-saveRealize/response.yaml#/DocumentAddSupply"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/POST/document/add-supply/save": {
+      "post": {
+        "summary": "Save document",
+        "description": "Save document",
+        "security": [
+          {
+            "BearerAuth": [
+              "bearer"
+            ]
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "./schemas/api-post-document-addSupply-save/requestBody.yaml#/DocumentAddSupply"
+              },
+              "examples": {
+                "default": {
+                  "$ref": "./schemas/api-post-document-addSupply-save/requestBody-example.yaml"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./schemas/api-post-document-addSupply-save/response.yaml#/DocumentAddSupply"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/POST/document/pin-ma/save-realize": {
+      "post": {
+        "summary": "Save and realize document",
+        "description": "Save and realize document",
+        "security": [
+          {
+            "BearerAuth": [
+              "bearer"
+            ]
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "./schemas/api-post-document-pinMainAsset-saveRealize/requestBody.yaml#/DocumentPinMainAsset"
+              },
+              "examples": {
+                "default": {
+                  "$ref": "./schemas/api-post-document-pinMainAsset-saveRealize/requestBody-example.yaml"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./schemas/api-post-document-pinMainAsset-saveRealize/response.yaml#/DocumentPinMainAsset"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/POST/document/pin-ma/save": {
+      "post": {
+        "summary": "Save document",
+        "description": "Save document",
+        "security": [
+          {
+            "BearerAuth": [
+              "bearer"
+            ]
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "./schemas/api-post-document-pinMainAsset-save/requestBody.yaml#/DocumentPinMainAsset"
+              },
+              "examples": {
+                "default": {
+                  "$ref": "./schemas/api-post-document-pinMainAsset-save/requestBody-example.yaml"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./schemas/api-post-document-pinMainAsset-save/response.yaml#/DocumentPinMainAsset"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/POST/upload-scan": {
+      "post": {
+        "summary": "Upload scan image",
+        "description": "Upload scan image to server",
+        "security": [
+          {
+            "BearerAuth": [
+              "bearer"
+            ]
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "./schemas/api-post-uploadScan/requestBody.yaml#/RequestBody"
+              },
+              "examples": {
+                "default": {
+                  "$ref": "./schemas/api-post-uploadScan/requestBody-example.yaml"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "filename": {
+                      "type": "string",
+                      "example": "scan_56.jpeg"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 401
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method not allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Internal Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Wrong query to database"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "tags": []
+}

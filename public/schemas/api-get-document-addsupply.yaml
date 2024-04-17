@@ -1,0 +1,23 @@
+DocumentAddSupply:
+  title: 'Document AddSupply'
+  type: object
+  properties:
+    id:
+      type: integer
+    number: 
+      type: string
+    date:
+      type: string
+      format: date
+    type:
+      $ref: './dbModels/allowedType.yaml#/AllowedType'
+    scans:
+      type: array
+      items: 
+        type: string
+    createdAt:
+      type: string
+      format: date
+    realizedAt:
+      type: string
+      format: date

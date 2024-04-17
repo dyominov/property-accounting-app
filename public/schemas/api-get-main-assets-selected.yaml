@@ -1,0 +1,38 @@
+MainAsset:
+  title: 'MainAsset'
+  type: object
+  properties:
+    id:
+      type: integer
+    title:
+      type: string
+    status:
+      $ref: './dbModels/enums.yaml#/MainAssetStatus'
+    groupId:
+      type: integer
+    dateOfManufacture:
+      type: string
+      format: date
+    dateOfStartOperation:
+      type: string
+      format: date
+    inventoryNumber:
+      type: string
+    serialNumber:
+      type: string
+    categoryId:
+      type: integer
+    integerId:
+      type: integer
+    cost:
+      type: integer
+    aowat:
+      type: integer
+    addDocId:
+      type: integer
+    group:
+      $ref: './dbModels/group.yaml#/Group'
+    category:
+      $ref: './dbModels/category.yaml#/Category'
+    integer:
+      $ref: './dbModels/integer.yaml#/Integer'

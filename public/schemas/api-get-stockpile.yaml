@@ -1,0 +1,48 @@
+Stockpile:
+  title: 'Stockpile'
+  type: object
+  properties:
+    id:
+      type: integer
+    title:
+      type: string
+    groupId:
+      type: integer
+    dateOfManufacture:
+      type: string
+      format: date
+    inventoryNumber:
+      type: string
+    serialNumber:
+      type: string
+    integerId:
+      type: integer
+    cost:
+      type: integer
+    actualAmount:
+      type: integer
+    balanceAmount:
+      type: integer
+    addDocId:
+      type: integer
+    group:
+      $ref: './dbModels/group.yaml#/Group'
+    integer:
+      $ref: './dbModels/integer.yaml#/Integer'
+Integer:
+  title: 'Integer'
+  type: object
+  properties:
+    id:
+      type: integer
+    title:
+      type: string
+Group:
+  title: 'Group'
+  type: object
+  properties:
+    id:
+      type: integer
+    title:
+      type: string
+

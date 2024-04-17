@@ -1,0 +1,14 @@
+services:
+  db:
+    build: .
+    container_name: db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: "omPassword1"
+      POSTGRES_USER: omAdmin
+    volumes:
+      - db-volume:/data/db
+volumes:
+  db-volume:

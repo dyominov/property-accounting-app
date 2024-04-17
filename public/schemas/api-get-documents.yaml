@@ -1,0 +1,18 @@
+Document:
+  title: 'Document'
+  type: object
+  properties:
+    id:
+      type: integer
+    number: 
+      type: string
+    realizedAt:
+      type: string
+      format: date
+    type:
+      $ref: './dbModels/allowedType.yaml#/AllowedType'
+    creator:
+      $ref: './dbModels/user.yaml#/User'
+    date:
+      type: string
+      format: date

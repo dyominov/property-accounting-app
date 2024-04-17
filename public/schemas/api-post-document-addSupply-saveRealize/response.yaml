@@ -1,0 +1,37 @@
+DocumentAddSupply:
+  title: 'Document AddSupply'
+  type: object
+  properties:
+    id:
+      type: integer
+    number: 
+      type: string
+    date:
+      type: string
+      format: date
+    status:
+      $ref: '../../dbModels/enums.yaml#/DocumentStatus'
+    typeId:
+      type: integer
+    createdAt:
+      type: string
+      format: date
+    realizedAt:
+      type: string
+      format: date
+    scans:
+      type: array
+      items: 
+        type: string
+    creatorId:
+      type: integer
+    realizatorId:
+      type: integer
+    mainAssets:
+      type: array
+      items:
+        $ref: '../../dbModels/mainAsset.yaml#/MainAsset'
+    stockpile:
+      type: array
+      items:
+        $ref: '../../dbModels/stockpile.yaml#/Stockpile'

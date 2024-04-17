@@ -1,0 +1,11 @@
+{
+  "apiFolder": "src/pages/api",
+  "schemaFolders": ["schemas"],
+  "definition": {
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Облік Майна API",
+      "version": "1.0"
+    }
+  }
+}

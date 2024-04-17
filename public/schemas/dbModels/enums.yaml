@@ -1,0 +1,21 @@
+Operation:
+  title: 'Operation'
+  type: string
+  enum:
+    - ADD_SUPPLY
+    - PIN_MAIN_ASSET
+MainAssetStatus:
+  title: 'MainAssetStatus'
+  type: string
+  enum:
+    - OWNED
+    - UNDEFINED
+    - PINNED
+    - MOVED
+DocumentStatus:
+  title: 'DocumentStatus'
+  type: string
+  enum:
+    - REALIZED
+    - NOT_REALIZED
+    - REALIZED_DISABLED

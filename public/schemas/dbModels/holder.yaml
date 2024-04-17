@@ -1,0 +1,18 @@
+Holder:
+  title: 'Holder'
+  type: object
+  properties:
+    id:
+      type: integer
+    name:
+      type: string
+    phone:
+      type: string
+    location:
+      type: string
+    extraInfo:
+      type: string
+    holderNotSystemUnitId:
+      type: integer
+    notSystemUnit:
+      $ref: './notSystemUnit.yaml#/NotSystemUnit'

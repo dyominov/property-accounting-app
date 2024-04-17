@@ -1,0 +1,26 @@
+Operation:
+  title: 'Operation'
+  type: object
+  properties:
+    title:
+      type: string
+    inventoryNumber:
+      type: string
+    serialNumber:
+      type: string
+    cost:
+      type: integer
+    type:
+      $ref: './dbModels/enums.yaml#/OperationType'
+    document:
+      type: string
+    date:
+      type: string
+    user:
+      type: string
+    scans:
+      type: array
+      items: 
+        type: string
+
+

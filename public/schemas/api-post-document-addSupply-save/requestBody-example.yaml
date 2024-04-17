@@ -1,0 +1,43 @@
+value:
+  header:
+    type: 1
+    number: 'G-9'
+    date: '2023-06-01T14:44:25.772Z'
+  objects:
+    - title: 'Виріб 1'
+      group: null
+      inventoryNumber: '46Б-17'
+      serialNumber: '55505050005'
+      category: 5
+      integer: 3
+      cost: '100'
+      aowat: 34.15667163776437
+      dateOfManufacture: '2023-06-01T14:44:25.772Z'
+      dateOfStartOperation: '2023-06-01T14:44:25.772Z'
+    - title: 'Виріб 2'
+      group:
+        id: 0
+        title: 'Група У'
+      inventoryNumber: '46Б-18'
+      serialNumber: '55505050077'
+      category: 2
+      integer: 2
+      cost: '120'
+      aowat: 21.46564
+      dateOfManufacture: '2023-06-01T14:44:25.772Z'
+      dateOfStartOperation: '2023-06-01T14:44:25.772Z'
+    - title: 'Запас 1'
+      group: null
+      inventoryNumber: '46Б-18'
+      serialNumber: '55505050077'
+      actualAmount: 180
+      balanceAmount: 180
+      integer: 3
+      cost: '980'
+      dateOfManufacture: '2023-06-01T14:44:25.772Z'
+  scans:
+    - 'scan_1.jpg'
+    - 'scan_2.jpg'
+    - 'scan_3.jpg'
+    - 'scan_4.jpg'
+

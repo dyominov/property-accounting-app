@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "Operation" ADD VALUE 'CHANGE_CATEGORY';
